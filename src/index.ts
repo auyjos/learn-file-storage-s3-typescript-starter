@@ -2,7 +2,7 @@ import { cfg } from "./config";
 import { handlerLogin, handlerRefresh, handlerRevoke } from "./api/auth";
 import {
   errorHandlingMiddleware,
-  cacheMiddleware,
+  noCacheMiddleware,
   withConfig,
 } from "./api/middleware";
 import { handlerUsersCreate } from "./api/users";
@@ -59,12 +59,12 @@ Bun.serve({
     },
   },
 
-  async fetch(req) {
+  async fetch(req: Request) {
     const url = new URL(req.url);
     const path = url.pathname;
 
     if (path.startsWith("/assets")) {
-      return cacheMiddleware(() =>
+      return noCacheMiddleware(() =>
         serveStaticFile(path.replace("/assets/", ""), cfg.assetsRoot)
       )(req);
     }
@@ -72,7 +72,7 @@ Bun.serve({
     return new Response("Not Found", { status: 404 });
   },
 
-  error(err) {
+  error(err: Error) {
     return errorHandlingMiddleware(cfg, err);
   },
 });
