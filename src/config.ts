@@ -14,6 +14,8 @@ export type ApiConfig = {
   s3Client: string;
 };
 
+
+
 const pathToDB = envOrThrow("DB_PATH");
 const jwtSecret = envOrThrow("JWT_SECRET");
 const platform = envOrThrow("PLATFORM");
